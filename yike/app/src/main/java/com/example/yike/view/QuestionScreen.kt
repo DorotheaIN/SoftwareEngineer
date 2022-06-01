@@ -180,11 +180,17 @@ private fun QuestionSection(
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(//折叠的
-                text = questionBody.description,
+                text = questionBody.description.substringAfter('/'),
 //                fontSize = 15.sp,
                 color = Color(0xFF5F5F5F)
             )
             Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = questionBody.description.substringBefore('/'),
+                                fontSize = 15.sp,
+                color = Color(0xFFA5A5A5)
+
+            )
         }
     }
 }
@@ -290,7 +296,7 @@ private fun AnswerListSection(
 //        }
 //    }
     Column() {
-        answerList?.forEach{answer ->
+        answerList?.reversed()?.forEach{ answer ->
             AnswerCard(answerInfo = answer,navController,questionId)
         }
     }

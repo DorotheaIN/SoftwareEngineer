@@ -147,7 +147,7 @@ fun QuestionCard(navController: NavController,ques:PublishQuestion) {
                 ),
             )
             Text(
-                text = ques.content,
+                text = ques.content.substringAfter('/'),
                 style = MaterialTheme.typography.body2, // 添加 style
                 modifier = Modifier.padding(
                     start = 10.dp,

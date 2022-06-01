@@ -1,11 +1,13 @@
 package com.example.yike.view
 
 import android.graphics.Paint
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -20,14 +22,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import com.example.yike.LinkText
+import com.example.yike.LinkTextData
 import com.example.yike.NameInputState
 import com.example.yike.R
 import com.example.yike.viewModel.*
@@ -429,14 +439,67 @@ fun applyInfo(
                     )
                     Spacer(modifier = Modifier.height(5.dp))
                     Box(Modifier.padding(horizontal = 5.dp)) {
-                        Text(
-                            text = applyInfo.certification,
-                            color = Color(0xD53D3A3A),
+//                        Text(
+//                            text = applyInfo.certification,
+//                            color = Color(0xD53D3A3A),
+//                            style = MaterialTheme.typography.body2,
+//                            modifier = Modifier.clickable {
+//                                isIntroExpanded = !isIntroExpanded
+//                            },
+//                            maxLines = if (isIntroExpanded) Int.MAX_VALUE else 1
+//                        )
+//                        LinkText(
+//                            linkTextData = listOf(
+//                                LinkTextData(
+//                                    text = applyInfo.certification,
+//                                    tag = "申请材料",
+//                                    annotation = applyInfo.certification,
+//                                    onClick = {
+//                                        Log.d("Link text", "${it.tag} ${it.item}")
+//                                    },
+//                                )
+//                            ),
+//                        )
+                        val annotatedLinkString: AnnotatedString = buildAnnotatedString {
+                            val str = applyInfo.certification
+//                            val startIndex = str.indexOf("link")
+//                            val endIndex = startIndex + 4
+                            val startIndex = str.indexOf(applyInfo.certification)
+                            val endIndex = startIndex + str.length
+                            append(str)
+                            addStyle(
+                                style = SpanStyle(
+                                    color = Color(0xff64B5F6),
+                                    fontSize = 14.sp,
+                                    letterSpacing = 0.25.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    textDecoration = TextDecoration.Underline
+                                ), start = startIndex ,end = endIndex
+                            )
+                            // attach a string annotation that stores a URL to the text "link"
+                            addStringAnnotation(
+                                tag = "URL",
+                                annotation = applyInfo.certification,
+                                start = startIndex,
+                                end = endIndex
+                            )
+                        }
+// UriHandler parse and opens URI inside AnnotatedString Item in Browse
+                        val uriHandler = LocalUriHandler.current
+// ? Clickable text returns position of text that is clicked in onClick callback
+                        ClickableText(
+                            modifier = Modifier
+//                                .padding(16.dp)
+                                .fillMaxWidth(),
+                            text = annotatedLinkString,
                             style = MaterialTheme.typography.body2,
-                            modifier = Modifier.clickable {
-                                isIntroExpanded = !isIntroExpanded
-                            },
-                            maxLines = if (isIntroExpanded) Int.MAX_VALUE else 1
+                            onClick = {
+                                annotatedLinkString
+                                    .getStringAnnotations("URL", it, it)
+                                    .firstOrNull()?.let { stringAnnotation ->
+                                        uriHandler.openUri(stringAnnotation.item)
+                                    }
+                            }
                         )
                     }
                 }

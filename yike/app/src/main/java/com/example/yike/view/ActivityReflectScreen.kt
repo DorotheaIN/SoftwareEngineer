@@ -313,7 +313,14 @@ fun EvaluationItem(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = evaluation.content,
+                    text = evaluation.content.substringAfter('/'),
+                    color = Color(0xFF7A7A7A),
+                    style = MaterialTheme.typography.caption
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = evaluation.content.substringBefore('/'),
                     color = Color(0xFF7A7A7A),
                     style = MaterialTheme.typography.caption
                 )

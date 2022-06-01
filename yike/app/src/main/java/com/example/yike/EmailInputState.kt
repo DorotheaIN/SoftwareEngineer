@@ -12,9 +12,9 @@ class EmailState : TextFieldState(
 
 private fun emailValidationError(email: String): String {
     return if (email.isBlank()) {
-        "Please provide an email."
+        "请输入邮箱地址"
     } else {
-        "Invalid email: $email."
+        "无效邮箱地址: $email."
     }
 }
 

@@ -1,5 +1,6 @@
 package com.example.yike.viewModel
 
+import android.icu.text.SimpleDateFormat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -10,6 +11,7 @@ import com.example.yike.viewModel.GlobalViewModel.getUserInfo
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.*
 
 
 data class Evaluation(
@@ -151,9 +153,9 @@ class ActivityDetailViewModel(
 
     fun review(content: String) = runBlocking {
         val review = launch {
-            print(content)
-            toReview.value = Evaluation(userID!!,activityID,content,5,"","","")
-            delay(200)
+            println(getNow())
+            toReview.value = Evaluation(userID!!,activityID,getNow()+'/'+content,5,"","","")
+            delay(1000)
         }
         review.join()
         val ref = launch {
@@ -174,4 +176,13 @@ class ActivityDetailViewModel(
         }
         ref.join()
     }
+}
+fun getNow(): String {
+    if (android.os.Build.VERSION.SDK_INT >= 24){
+        return SimpleDateFormat("yyyy-MM-dd").format(Date())
+    }else{
+        var tms = Calendar.getInstance()
+        return tms.get(Calendar.YEAR).toString() + "-" + tms.get(Calendar.MONTH).toString() + "-" + tms.get(Calendar.DAY_OF_MONTH).toString()
+    }
+
 }

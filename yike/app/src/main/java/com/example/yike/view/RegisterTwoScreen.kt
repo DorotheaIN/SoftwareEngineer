@@ -1,27 +1,32 @@
 package com.example.yike.view
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.yike.*
 import com.example.yike.viewModel.GetPersonRegisterViewModel
 import com.example.yike.viewModel.GlobalViewModel
-import com.example.yike.viewModel.GlobalViewModel.sendEmailInfo
-import com.example.yike.viewModel.InputRegisterInfo
 import com.example.yike.viewModel.VerifyCodeViewModel
 
 @Composable
@@ -74,7 +79,10 @@ fun RegisterTwoScreenContent(
 
     val nameInput = remember { NameInputState() }
     val passwordInput = remember { PasswordInputState() }
+    val rePasswordInput = remember{RePasswordInputState()}
     val verifyCodeInput = remember { VerifyCodeInputState() }
+
+    GlobalViewModel.updatePassWord(passwordInput.text)
 
     if(registerResult=="success"){
         println("2222222isSuccess = $isSuccess")
@@ -110,7 +118,9 @@ fun RegisterTwoScreenContent(
             RegisterTwoTable(navController)
         }
         Box(
-            Modifier.fillMaxSize().align(Alignment.Center)
+            Modifier
+                .fillMaxSize()
+                .align(Alignment.Center)
         ){
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -126,11 +136,13 @@ fun RegisterTwoScreenContent(
                 Spacer(Modifier.height(10.dp))
                 TextCode(passwordInput)
                 Spacer(Modifier.height(10.dp))
+                ReTextCode(rePasswordInput)
+                Spacer(Modifier.height(10.dp))
                 TextVerify(verifyCodeInput)
                 Spacer(Modifier.height(10.dp))
                 RegisterButton(
                     onClick = {
-                        if(passwordInput.isValid && nameInput.isValid && verifyCodeInput.isValid && verifyCodeInput.text == GlobalViewModel.getVerifyCode()){
+                        if(passwordInput.isValid && nameInput.isValid && verifyCodeInput.isValid && verifyCodeInput.text == GlobalViewModel.getVerifyCode()&&rePasswordInput.isValid){
                             clickEvent(email,nameInput.text,passwordInput.text)
                             println("isSuccess = $isSuccess")
                         }
@@ -230,8 +242,100 @@ fun TextCode(passwordInput:PasswordInputState){
                 color = Color(0xFFFFFFFF),
                 textAlign = TextAlign.Center
             ) },
-            shape = RoundedCornerShape(30.dp)
+            shape = RoundedCornerShape(30.dp),
+            visualTransformation = if (textCode.shouldHidePassword) {
+                PasswordVisualTransformation()
+            } else {
+                VisualTransformation.None
+            },
+            trailingIcon = {
+                Crossfade(targetState = textCode.shouldHidePassword) { hidePassword ->
+                    if (hidePassword) {
+                        PasswordVisabilityIcon(
+                            iconToUse = Icons.Default.VisibilityOff,
+                            textState = textCode
+                        )
+                    } else {
+                        PasswordVisabilityIcon(
+                            iconToUse = Icons.Default.Visibility,
+                            textState = textCode
+                        )
+                    }
+                }
+            }
         )
+    }
+}
+
+@Composable
+fun ReTextCode(passwordInput:RePasswordInputState){
+    val reTextCode = remember {
+        RePasswordInputState()
+    }
+    Surface(
+        shape = RoundedCornerShape(30.dp),
+        color = Color(0x51E4DFDB),
+        modifier = Modifier
+            .size(width = 700.dp, height = 55.dp)
+            .padding(start = 30.dp, end = 30.dp)
+            .fillMaxWidth()
+    ) {
+        OutlinedTextField(
+            value = reTextCode.text,
+            onValueChange = {newText ->
+                reTextCode.text = newText
+                passwordInput.text = reTextCode.text
+            },
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = Color(0xFF0D0D0E),
+                backgroundColor = Color.Transparent,
+                cursorColor = Color(0xFF045DA0),
+            ),
+            maxLines = 1,
+            placeholder = { Text("请再次输入密码确认",
+                modifier = Modifier
+//                    .padding(start = 115.dp, end = 50.dp)
+                    .fillMaxWidth(),
+                color = Color(0xFFFFFFFF),
+                textAlign = TextAlign.Center
+            ) },
+            shape = RoundedCornerShape(30.dp),
+            modifier = Modifier.onFocusChanged {
+                val isFocused = it.isFocused
+                reTextCode.onFocusChange(isFocused)
+
+                if (!isFocused) {
+                    reTextCode.enableShowErrors()
+                }
+            },
+            isError = reTextCode.showErrors,
+            visualTransformation = if (reTextCode.shouldHidePassword) {
+                PasswordVisualTransformation()
+            } else {
+                VisualTransformation.None
+            },
+            trailingIcon = {
+                Crossfade(targetState = reTextCode.shouldHidePassword) { hidePassword ->
+                    if (hidePassword) {
+                        RePasswordVisabilityIcon(
+                            iconToUse = Icons.Default.VisibilityOff,
+                            textState = reTextCode
+                        )
+                    } else {
+                        RePasswordVisabilityIcon(
+                            iconToUse = Icons.Default.Visibility,
+                            textState = reTextCode
+                        )
+                    }
+                }
+            },
+
+
+        )
+
+    }
+    reTextCode.getError()?.let { errorMessage ->
+        TextFieldError(textError = errorMessage)
     }
 }
 
@@ -289,7 +393,7 @@ fun RegisterButton(
     ) {
         Text("点击注册",
             modifier = Modifier
-                .padding(vertical =  15.dp)
+                .padding(vertical = 15.dp)
                 .fillMaxWidth()
                 .fillMaxHeight(),
             style =MaterialTheme.typography.button,
@@ -328,5 +432,51 @@ private fun alterDialog(
                     )
                 }
             })
+    }
+}
+
+@Composable
+private fun PasswordVisabilityIcon(
+    iconToUse: ImageVector,
+    textState: PasswordInputState
+) {
+    Icon(
+        iconToUse,
+        contentDescription = "Toggle Password Visibility",
+        modifier = Modifier
+            .clickable {
+                textState.shouldHidePassword = !textState.shouldHidePassword
+            },
+    )
+}
+
+@Composable
+private fun RePasswordVisabilityIcon(
+    iconToUse: ImageVector,
+    textState: RePasswordInputState
+) {
+    Icon(
+        iconToUse,
+        contentDescription = "Toggle Password Visibility",
+        modifier = Modifier
+            .clickable {
+                textState.shouldHidePassword = !textState.shouldHidePassword
+            },
+    )
+}
+
+@Composable
+private fun TextFieldError(textError: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp,horizontal = 30.dp)
+    ) {
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(
+            text = textError,
+            modifier = Modifier.fillMaxWidth(),
+            style = LocalTextStyle.current.copy(color = MaterialTheme.colors.error)
+        )
     }
 }

@@ -48,7 +48,7 @@ fun AnswerCard(
                 Text(text = answerInfo.userInfo.name)
                 Spacer(Modifier.padding(vertical = 4.dp))
 //                AnswerContent(content = answerInfo.content)
-                AnswerContent(content = answerInfo.content)
+                AnswerContent(content = answerInfo.content.substringAfter('/'))
             }
         }
     }

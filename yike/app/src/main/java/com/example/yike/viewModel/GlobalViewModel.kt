@@ -1,9 +1,9 @@
 package com.example.yike.viewModel
 
-import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.example.yike.PasswordInputState
 import com.example.yike.service.OfficialRepository
 import com.example.yike.service.SendEmailRepository
 import okhttp3.MediaType
@@ -18,6 +18,7 @@ object GlobalViewModel: ViewModel() {
     private val globalOrgInfo:MutableLiveData<Organization> = MutableLiveData<Organization>()
     private val globalEmail: MutableLiveData<String> = MutableLiveData<String>()
     private val globalVerifyCode: MutableLiveData<String> = MutableLiveData<String>()
+    private val globalPassWord:MutableLiveData<String> = MutableLiveData<String>()
 
     private val globalAdminInfo:MutableLiveData<AdminInfo> = MutableLiveData<AdminInfo>()
 
@@ -76,13 +77,17 @@ object GlobalViewModel: ViewModel() {
         globalEmail.value = email
     }
 
-    fun updateVerifyCode(verifyCode:String?) {
+    fun updateVerifyCode(verifyCode: String) {
         globalVerifyCode.value = verifyCode
         println(verifyCode)
     }
 
     fun updateAdminInfo(adminInfo: AdminInfo){
         globalAdminInfo.value = adminInfo
+    }
+
+    fun updatePassWord(passWord:String){
+        globalPassWord.value=passWord
     }
 
     fun getUserInfo(): UserInfo? { //为啥用这个 因为observe有问题 不知道为何？ 可以再试试
@@ -113,6 +118,10 @@ object GlobalViewModel: ViewModel() {
 
     fun getAdminInfo():AdminInfo?{
         return globalAdminInfo.value
+    }
+
+    fun getPassWord():String?{
+        return globalPassWord.value
     }
 
 

@@ -149,7 +149,7 @@ private fun PasswordInput(passwordInput: PasswordInputState) {
             passwordInput.text = textState.text
         },
         label = {
-            Text(text = "Password")
+            Text(text = "请输入密码")
         },
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Password,
@@ -261,7 +261,7 @@ private fun IdInput(idInput: RequiredInputState) {
             idInput.text = textState.text
         },
         label = {
-            Text(text = "Admin ID")
+            Text(text = "请输入管理员ID")
         },
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Number,
@@ -302,8 +302,9 @@ private fun TextFieldError(textError: String) {
 @Composable
 private fun LogInHeader() {
     Text(
-        text = "Log in",
+        text = "登录",
         style = MaterialTheme.typography.h1,
+        letterSpacing = 8.sp,
         modifier = Modifier
             .paddingFromBaseline(
                 top = 184.dp,

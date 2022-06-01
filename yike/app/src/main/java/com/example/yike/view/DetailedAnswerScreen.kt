@@ -147,11 +147,18 @@ fun DetailAnswer(
                         DetailedQuestionPart(questionAnswerInfoList)
                         DetailedUserPart(questionAnswerInfoList)
                         ShowAnswer(questionAnswerInfoList)
+                        Spacer(Modifier.height(20.dp))
+                        Text("评论",
+                            modifier = Modifier.padding(horizontal = 10.dp),
+                            style = MaterialTheme.typography.h6,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                        Spacer(Modifier.height(5.dp))
                     }
                 }
                 if (questionAnswerInfoList != null) {
                     item(questionAnswerInfoList.comment){
-                        questionAnswerInfoList.comment.forEach() {
+                        questionAnswerInfoList.comment.reversed().forEach() {
                             CommentCard(it)
                         }
                     }
@@ -212,7 +219,7 @@ fun DetailedQuestionPart(ques:QuesAnswer)
             ) {
                 Text(
                     text = ques.question,//展示问题内容
-                    fontSize = 30.sp,
+                    fontSize = 24.sp,
                     fontWeight = FontWeight.SemiBold,
                     style = MaterialTheme.typography.h4,
 //                    modifier = Modifier.padding(start = 5.dp,end = 5.dp)
@@ -237,11 +244,19 @@ Column() {
     Box(modifier = Modifier.padding(vertical = 2.dp))
     Text(
 //        text = AnswerData.answer.answerContent,
-        text = ans.answer,//展示回答内容
+        text = ans.answer.substringAfter('/'),//展示回答内容
         modifier = Modifier.padding(horizontal = 10.dp),
         fontSize = 20.sp,
         style = MaterialTheme.typography.body1, // 添加 style
         )
+    Spacer(modifier = Modifier.height(10.dp))//展示回答日期
+    Text(
+        text = ans.answer.substringBefore('/'),
+        modifier = Modifier.padding(horizontal = 10.dp),
+        fontSize = 15.sp,
+        color = Color(0xFFA5A5A5)
+
+    )
 }
 }
 
@@ -294,7 +309,7 @@ fun CommentCard(com:CommentInfo){
             shape = MaterialTheme.shapes.medium, // 使用 MaterialTheme 自带的形状
             elevation = 0.dp,
             modifier = Modifier
-                .padding(all = 8.dp)
+                .padding(start = 8.dp,top = 8.dp,end = 8.dp, bottom = 3.dp)
                 .fillMaxWidth()
                 .clickable { // 添加一个新的 Modifier 扩展方法，可以让元素具有点击的效果
                     isExpanded = !isExpanded // 编写点击的事件内容
@@ -302,7 +317,7 @@ fun CommentCard(com:CommentInfo){
             color = surfaceColor
         ) {
             Row(
-                modifier = Modifier.padding(all = 8.dp)
+                modifier = Modifier.padding(start = 8.dp,top = 8.dp,end = 8.dp, bottom = 3.dp)
             ) {
                 Image(
 //                painterResource(id = R.drawable.tay),
@@ -320,11 +335,17 @@ fun CommentCard(com:CommentInfo){
                     )
                     Spacer(modifier = Modifier.padding(vertical = 4.dp))
                     Text(
-                        text = com.content,//评论者内容
+                        text = com.content.substringAfter('/'),//评论者内容
                         style = MaterialTheme.typography.body2, // 添加 style
                         maxLines = if (isExpanded) Int.MAX_VALUE else 1,
                         // Composable 大小的动画效果
                         modifier = Modifier.animateContentSize()
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))//显示评论日期
+                    Text(
+                        text = com.content.substringBefore('/'),
+                        fontSize = 15.sp,
+                        color = Color(0xFFA5A5A5)
                     )
                 }
             }

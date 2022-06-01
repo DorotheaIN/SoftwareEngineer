@@ -144,7 +144,7 @@ fun QuestionCard(navController: NavController, ques: FollowQuestion) {
                 ),
             )
             Text(
-                text = ques.content.toString(),//提出问题的具体内容
+                text = ques.content.toString().substringAfter('/'),//提出问题的具体内容
                 style = MaterialTheme.typography.body2, // 添加 style
                 modifier = Modifier.padding(
                     start = 10.dp,

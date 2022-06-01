@@ -13,25 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key.Companion.Sleep
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navArgument
-import androidx.navigation.compose.rememberNavController
-import com.example.yike.view.RegisterTwoScreen
 import com.example.yike.viewModel.*
-import com.example.yike.viewModel.GlobalViewModel.checksendStatus
-import com.example.yike.viewModel.GlobalViewModel.sendEmailInfo
 import kotlinx.coroutines.delay
 
 
@@ -194,7 +183,8 @@ fun RegistDescript(){
     ) {
         Column() {
             Text(
-                "开启我的大学一刻",
+                //"开启我的大学一刻",
+                "个人用户注册",
                 color = Color(0xFFFFFFFF),
                 style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center,
@@ -235,7 +225,7 @@ private fun TextEmail(emailInput:EmailState){
                 cursorColor = Color(0xFF045DA0),
             ),
             maxLines = 1,
-            placeholder = { Text("请输入邮箱号进行注册",
+            placeholder = { Text("请输入邮箱号获取验证码",
                 modifier = Modifier
 //                    .padding(start = 75.dp ,end =50.dp )
                     .fillMaxWidth(),

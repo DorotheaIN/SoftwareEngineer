@@ -613,7 +613,7 @@ private fun addReportAlterDialog(
                     )
                     Spacer(modifier = Modifier.height(5.dp))
                     Text(
-                        text = "被举报回答： "+quesInfo.answer,
+                        text = "被举报回答： "+quesInfo.answer.substringAfter('/'),
                         style = MaterialTheme.typography.body1,
                         modifier = Modifier.clickable{isExpanded = !isExpanded},
                         maxLines = if (isExpanded) Int.MAX_VALUE else 4

@@ -22,7 +22,7 @@ fun NavBottomBar(
         BottomButton(
             selected = dir == "Discuss",
             icon = Icons.Default.Home,
-            labelText = "Discuss",
+            labelText = "讨论",
             onClick = {
                 navController.navigate("discuss")
             }
@@ -30,7 +30,7 @@ fun NavBottomBar(
         BottomButton(
             selected = dir == "Activity",
             icon = Icons.Default.FavoriteBorder,
-            labelText = "Activity",
+            labelText = "活动",
             onClick = {
                 navController.navigate("activity")
             }
@@ -38,7 +38,7 @@ fun NavBottomBar(
         BottomButton(
             selected = dir == "Info",
             icon = Icons.Default.AccountCircle,
-            labelText = "Info",
+            labelText = "个人",
             onClick = {
                 navController.navigate("mainInfo_screen")
             },
